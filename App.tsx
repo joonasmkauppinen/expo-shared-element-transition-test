@@ -1,20 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { HomeScreen } from './src/screens/HomeScreen/HomeScreen';
+import { RootStackParamList } from './src/types/navigator';
+import { DetailsScreen } from './src/screens/DetailsScreen/DetailsScreen';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
 export default function App() {
+  const Stack = createSharedElementStackNavigator<RootStackParamList>();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen
+          name="Details"
+          component={DetailsScreen}
+          options={{
+            presentation: 'transparentModal',
+          }}
+          sharedElements={({ params }) => {
+            return [params.id];
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
